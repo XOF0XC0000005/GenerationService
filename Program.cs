@@ -1,3 +1,8 @@
+using GenerationService.Interfaces;
+using GenerationService.Persisntence;
+using GenerationService.Repositories;
+using GenerationService.Services;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
 namespace GenerationService
@@ -12,6 +17,12 @@ namespace GenerationService
             {
                 options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
             });
+
+            builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddScoped<IFileRepository, FileRepository>();
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
