@@ -33,6 +33,12 @@ namespace GenerationService.Controllers
         public async Task<IActionResult> GetFileList()
         {
             var files = await _fileService.GetFileAsync();
+
+            if (files == null || !files.Any())
+            {
+                return NotFound("No files found.");
+            }
+
             return Ok(files);
         }
 

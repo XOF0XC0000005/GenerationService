@@ -2,7 +2,7 @@
 {
     public class ExcelDataRequest
     {
-        public List<string> Columns { get; set; } = new();
-        public List<List<string>> Values { get; set; } = new();
+        public string[] Columns { get; set; }
+        public object[][] Values { get; set; }
     }
 }

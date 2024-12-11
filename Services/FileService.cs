@@ -33,6 +33,8 @@ namespace GenerationService.Services
         {
             try
             {
+                Console.WriteLine(request.ToString());
+
                 var filePath = Path.Combine("uploads", $"{Guid.NewGuid()}.xlsx");
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -41,14 +43,14 @@ namespace GenerationService.Services
                 {
                     var worksheet = package.Workbook.Worksheets.Add("Sheet1");
 
-                    for (int i = 0; i < request.Columns.Count; i++)
+                    for (int i = 0; i < request.Columns.Length; i++)
                     {
                         worksheet.Cells[1, i + 1].Value = request.Columns[i];
                     }
 
-                    for (int i = 0; i < request.Values.Count; i++)
+                    for (int i = 0; i < request.Values.Length; i++)
                     {
-                        for (int j = 0; j < request.Values[i].Count; j++)
+                        for (int j = 0; j < request.Values[i].Length; j++)
                         {
                             worksheet.Cells[i + 2, j + 1].Value = request.Values[i][j];
                         }
@@ -57,17 +59,7 @@ namespace GenerationService.Services
                     Directory.CreateDirectory("uploads");
                     await package.SaveAsAsync(new FileInfo(filePath));
                 }
-
-                var fileMeta = new FileMeta
-                {
-                    Id = Guid.NewGuid(),
-                    Name = Path.GetFileName(filePath),
-                    Path = filePath,
-                    Size = new FileInfo(filePath).Length,
-                    CreatedAt = DateTime.UtcNow,
-                };
-
-                await _fileRepository.SaveFileMetaAsync(fileMeta);
+                await SaveFileMetadataAsync(Path.GetFileName(filePath), filePath, new FileInfo(filePath).Length, DateTime.UtcNow);
 
                 return new FileResult { IsSuccess = true, FilePath = filePath };
             }
@@ -80,6 +72,20 @@ namespace GenerationService.Services
         public async Task<List<FileMeta>> GetFileAsync()
         {
             return await _fileRepository.GetAllFileAsync();
+        }
+
+        public async Task SaveFileMetadataAsync(string fileName, string path, long fileSize, DateTime createdDate)
+        {
+            var fileMeta = new FileMeta
+            {
+                Name = fileName,
+                Size = fileSize,
+                Path = path,
+                CreatedAt= createdDate,
+            };
+
+            await _fileRepository.SaveFileMetaAsync(fileMeta);
+
         }
     }
 }
