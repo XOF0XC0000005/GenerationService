@@ -2,6 +2,7 @@
 using GenerationService.Interfaces;
 using GenerationService.Models;
 using Microsoft.AspNetCore.Mvc;
+using FileResult = GenerationService.Models.FileResult;
 
 namespace GenerationService.Controllers
 {
@@ -23,10 +24,10 @@ namespace GenerationService.Controllers
             
             if (result.IsSuccess)
             {
-                return Ok(new {status = "success", path = result.FilePath});
+                return Ok(new FileResult { IsSuccess = true, FilePath = result.FilePath});
             }
 
-            return BadRequest(new { status = "error", message = result.ErrorMessage });
+            return BadRequest(new FileResult { IsSuccess = false, ErrorMessage = result.ErrorMessage });
         }
 
         [HttpGet("list")]
@@ -49,10 +50,10 @@ namespace GenerationService.Controllers
 
             if(result)
             {
-                return Ok(new {staus = "success" });
+                return Ok("Success");
             }
 
-            return NotFound(new { status = "error", message = "File not found" });
+            return NotFound("File not found");
         }
     }
 }
