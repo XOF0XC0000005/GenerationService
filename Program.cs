@@ -42,10 +42,12 @@ namespace GenerationService
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Generation Service API v1");
                 });
+
+                app.UseHttpsRedirection();
             }
 
             app.UseRouting();
-            app.UseHttpsRedirection();
+            
             //app.UseAuthorization();
             app.MapControllers();
             app.Run();
