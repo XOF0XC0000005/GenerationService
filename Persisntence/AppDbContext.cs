@@ -1,6 +1,5 @@
 ﻿using GenerationService.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 
 namespace GenerationService.Persisntence
 {

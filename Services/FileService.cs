@@ -59,6 +59,7 @@ namespace GenerationService.Services
                     Directory.CreateDirectory("uploads");
                     await package.SaveAsAsync(new FileInfo(filePath));
                 }
+
                 await SaveFileMetadataAsync(Path.GetFileName(filePath), filePath, new FileInfo(filePath).Length, DateTime.UtcNow);
 
                 return new FileResult { IsSuccess = true, FilePath = filePath };
@@ -85,7 +86,6 @@ namespace GenerationService.Services
             };
 
             await _fileRepository.SaveFileMetaAsync(fileMeta);
-
         }
     }
 }
